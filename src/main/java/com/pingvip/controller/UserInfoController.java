@@ -32,4 +32,8 @@ public class UserInfoController {
     public void testMail(){
         pingVipMailService.mailTest();
     }
+    @RequestMapping("/user/testMailFreemarker")
+    public void testMailFreemarker(){
+        //pingVipMailService.testMailFreemarker();
+    }
 }
