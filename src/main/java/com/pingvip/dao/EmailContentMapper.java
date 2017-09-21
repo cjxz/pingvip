@@ -17,4 +17,6 @@ public interface EmailContentMapper {
     int updateByPrimaryKeyWithBLOBs(EmailContent record);
 
     int updateByPrimaryKey(EmailContent record);
+
+    EmailContent selectByName(String name);
 }

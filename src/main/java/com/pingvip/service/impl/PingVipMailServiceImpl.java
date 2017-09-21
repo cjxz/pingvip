@@ -1,8 +1,12 @@
 package com.pingvip.service.impl;
 
+import com.pingvip.VO.EmailParamsVO;
+import com.pingvip.dao.EmailContentMapper;
 import com.pingvip.dao.UserInfoMapper;
+import com.pingvip.entity.EmailContent;
 import com.pingvip.entity.UserInfo;
 import com.pingvip.service.PingVipMailService;
+import com.pingvip.tool.FreeMarkerUtil;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
@@ -22,31 +26,23 @@ import java.util.Map;
 public class PingVipMailServiceImpl implements PingVipMailService{
     @Autowired
     private JavaMailSender javaMailSender;
+
     @Autowired
-    private UserInfoMapper userInfoMapper;
+    private EmailContentMapper emailContentMapper;
     @Value("${spring.mail.username}")
     private String username;
+
     @Override
-    public void mailTest() {
+    public void sendMail(EmailParamsVO emailParamsVO) {
+        EmailContent emailContent = emailContentMapper.selectByName(emailParamsVO.getName());
+        String title = FreeMarkerUtil.toFreeMarkerContent(emailParamsVO.getName(),emailContent.getTitle(),emailParamsVO.getTitleParams());
+        String content = FreeMarkerUtil.toFreeMarkerContent(emailParamsVO.getName(),emailContent.getContent(),emailParamsVO.getContentParams());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(username);
-        message.setTo("985552943@qq.com");
-        message.setSubject("标题：测试标题");
-        message.setText("测试内容部份");
+        message.setTo(emailParamsVO.getTo());
+        message.setCc(emailParamsVO.getCc());
+        message.setSubject(title);
+        message.setText(content);
         javaMailSender.send(message);
-    }
-
-    @Override
-    public void testMailFreemarker() throws Exception {
-        UserInfo user = userInfoMapper.selectByPrimaryKey(1);
-        String path = "/web/user.ftl";
-        File file = new File(path);
-        TemplateLoader loader = new FileTemplateLoader(file);
-        Configuration configuration = new Configuration();
-        Template template = configuration.getTemplate("user.html");
-        Map<String,UserInfo> map = new HashMap<String, UserInfo>();
-        map.put("user",user);
-
-
     }
 }
