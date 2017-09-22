@@ -35,8 +35,14 @@ public class PingVipMailServiceImpl implements PingVipMailService{
     @Override
     public void sendMail(EmailParamsVO emailParamsVO) {
         EmailContent emailContent = emailContentMapper.selectByName(emailParamsVO.getName());
-        String title = FreeMarkerUtil.toFreeMarkerContent(emailParamsVO.getName(),emailContent.getTitle(),emailParamsVO.getTitleParams());
-        String content = FreeMarkerUtil.toFreeMarkerContent(emailParamsVO.getName(),emailContent.getContent(),emailParamsVO.getContentParams());
+        String title = FreeMarkerUtil.toFreeMarkerContent(
+                emailParamsVO.getName(),
+                emailContent.getTitle(),
+                emailParamsVO.getTitleParams());
+        String content = FreeMarkerUtil.toFreeMarkerContent(
+                emailParamsVO.getName(),
+                emailContent.getContent(),
+                emailParamsVO.getContentParams());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(username);
         message.setTo(emailParamsVO.getTo());
