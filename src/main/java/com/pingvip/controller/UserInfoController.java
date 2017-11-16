@@ -1,6 +1,7 @@
 package com.pingvip.controller;
 
 import com.pingvip.entity.UserInfo;
+import com.pingvip.service.MessageSendService;
 import com.pingvip.service.PingVipMailService;
 import com.pingvip.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ public class UserInfoController {
     private UserInfoService userInfoService;
     @Autowired
     private PingVipMailService pingVipMailService;
+    @Autowired
+    private MessageSendService messageSendService;
+
     @RequestMapping("/user/getUserInfo")
     public UserInfo getUserInfo (){
         return userInfoService.getUserInfo(1);
@@ -30,10 +34,14 @@ public class UserInfoController {
     }
     @RequestMapping("/user/testMail")
     public void testMail(){
-        pingVipMailService.mailTest();
+//        pingVipMailService.mailTest();
     }
     @RequestMapping("/user/testMailFreemarker")
     public void testMailFreemarker(){
         //pingVipMailService.testMailFreemarker();
+    }
+    @RequestMapping("/user/testJms")
+    public void testJms(){
+        messageSendService.sendMessage("测试JMS");
     }
 }
